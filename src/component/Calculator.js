@@ -48,32 +48,99 @@ class Calculator extends React.Component {
   state = {
     screen: "",
     operation: [],
-    result: "",
+    result: 0,
   };
 
   buttonClicked = (e) => {
     this.setState({
-        screen : `${this.state.screen + e.target.value}` ,
-        operation : [...this.state.operation, e.target.value],
+      screen: `${this.state.screen + e.target.value}`,
+      operation: [
+        ...this.state.operation,
+        /[\+\-\*\/]/.test(e.target.value)
+          ? `,${e.target.value},`
+          : e.target.value,
+      ],
+      result: 0,
     });
 
-    console.log( this.state.operation);
+    console.log(this.state.operation);
   };
 
   removeValue = (e) => {
-    if (this.state.operation.length > 0) {
-      this.setState({
-        screen: this.state.screen.slice(0, -1),
-        operation: this.state.operation.slice(0,-1),
-      });
+    if (this.state.result==0) {
+      if (this.state.operation.length > 0) {
+        this.setState({
+          screen: this.state.screen.slice(0, -1),
+          operation: this.state.operation.slice(0, -1),
+        });
+      }
+    } else {
+        console.log('removing all');
+        this.setState({
+            screen: "",
+            operation: [],
+            result: 0,
+          });
     }
     console.log(this.state.operation);
+  };
+
+  resultOperation = (e) => {
+    try {
+      const operation = this.state.operation.join("").split(",");
+      let res = 0;
+      let i = 0;
+      let current = parseFloat(operation[0]);
+      console.log(operation);
+
+      operation.forEach((it) => {
+        console.log(`IT: ${it} and I: ${i}`);
+
+        if (/[\+\-\*\/]/.test(it)) {
+          if (i != 0 || i != operation.length - 1) {
+            switch (it) {
+              case "+":
+                res = parseFloat(current) + parseFloat(operation[i + 1]);
+                break;
+              case "-":
+                res = parseFloat(current) - parseFloat(operation[i + 1]);
+                break;
+              case "*":
+                res = parseFloat(current) * parseFloat(operation[i + 1]);
+                break;
+              case "/":
+                res = parseFloat(current) / parseFloat(operation[i + 1]);
+                break;
+            }
+            current = parseFloat(res);
+            console.log(`current: ${current}`);
+          } else {
+            throw new Error(
+              "First or last element into the operation can't be an operator."
+            );
+          }
+        }
+        i++;
+      });
+
+      this.setState({
+        screen: "",
+        operation: [],
+        result: res,
+      });
+    } catch (e) {
+      console.error(
+        `There's an error into the operation, check it out and try it again later: ${e}`
+      );
+    }
   };
 
   render() {
     return (
       <>
-        <Screen>{this.state.screen}</Screen>
+        <Screen>
+          {this.state.result == 0 ? this.state.screen : this.state.result}
+        </Screen>
         <div className="calc-buttons">
           <ButtonOperator onClick={this.buttonClicked} value="+">
             +
@@ -120,13 +187,12 @@ class Calculator extends React.Component {
           <ButtonAC className="button-AC" onClick={this.removeValue} value="AC">
             AC
           </ButtonAC>
-          <ButtonNumber onClick={this.buttonClicked} value="1" r>
+          <ButtonNumber onClick={this.buttonClicked} value=".">
             .
           </ButtonNumber>
           <ButtonOperator
             className="button-equal"
-            onClick={this.buttonClicked}
-            value="1"
+            onClick={this.resultOperation}
           >
             =
           </ButtonOperator>
