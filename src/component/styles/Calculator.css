@@ -1,0 +1,16 @@
+.calc-buttons{
+    width: 320px;
+    display:grid;
+    grid-template-areas: "button button button button";
+}
+
+.button-AC{
+    grid-column: 1;
+    grid-row:5;
+}
+
+.button-equal{
+    min-height: 240px;
+    grid-column: 4;
+    grid-row: 2 / 6;
+}
