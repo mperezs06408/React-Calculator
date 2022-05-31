@@ -52,23 +52,31 @@ class Calculator extends React.Component {
   };
 
   buttonClicked = (e) => {
-      //Evaluar cuando se obtenga un resultado y se quiera operar con este
-    this.setState({
-      screen: `${this.state.screen + e.target.value}`,
-      operation: [
-        ...this.state.operation,
-        /[\+\-\*\/]/.test(e.target.value)
-          ? `,${e.target.value},`
-          : e.target.value,
-      ],
-      result: 0,
-    });
+    //Evaluar cuando se obtenga un resultado y se quiera operar con este
+    if (this.state.result != 0 && /[\+\-\*\/]/.test(e.target.value)) {
+        this.setState({
+          screen: `${this.state.result + e.target.value}`,
+          operation: [this.state.result, `,${e.target.value},`],
+          result: 0,
+        });
 
+    } else {
+      this.setState({
+        screen: `${this.state.screen + e.target.value}`,
+        operation: [
+          ...this.state.operation,
+          /[\+\-\*\/]/.test(e.target.value)
+            ? `,${e.target.value},`
+            : e.target.value,
+        ],
+        result: 0,
+      });
+    }
     console.log(this.state.operation);
   };
 
   removeValue = (e) => {
-    if (this.state.result==0) {
+    if (this.state.result == 0) {
       if (this.state.operation.length > 0) {
         this.setState({
           screen: this.state.screen.slice(0, -1),
@@ -76,12 +84,12 @@ class Calculator extends React.Component {
         });
       }
     } else {
-        console.log('removing all');
-        this.setState({
-            screen: "",
-            operation: [],
-            result: 0,
-          });
+      console.log("removing all");
+      this.setState({
+        screen: "",
+        operation: [],
+        result: 0,
+      });
     }
     console.log(this.state.operation);
   };
