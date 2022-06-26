@@ -1,8 +1,11 @@
+import Container from './component/Container';
 import Calculator from "./component/Calculator";
 
 function App() {
   return (
-    <Calculator />
+    <Container>
+      <Calculator />
+    </Container>
   );
 }
 
