@@ -134,7 +134,7 @@ class Calculator extends React.Component {
       this.setState({
         screen: "",
         operation: [],
-        result: res,
+        result: isNaN(res) ? 0 : res,
       });
     } catch (e) {
       console.error(
