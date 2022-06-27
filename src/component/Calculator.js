@@ -147,7 +147,7 @@ class Calculator extends React.Component {
     return (
       <div className="calc-container">
         <Screen>
-          {this.state.result == 0 ? this.state.screen : this.state.result}
+          {this.state.result == 0 ? this.state.screen === "" ? 0 : this.state.screen : this.state.result}
         </Screen>
         <div className="calc-buttons">
           <ButtonOperator onClick={this.buttonClicked} value="+">
